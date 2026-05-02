@@ -27,37 +27,7 @@ body {
   color: white;
 }
 
-/* 背景能量線 */
-.bg-line {
-  position: fixed;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 120%;
-}
 
-.bg-line::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 200%;
-  background: linear-gradient(to top, transparent, #06c755, transparent);
-  animation: flow 1.8s linear infinite;
-  filter: blur(1px);
-}
-
-@keyframes flow {
-  0% { transform: translateY(100%); }
-  100% { transform: translateY(-100%); }
-}
-
-.container {
-  width: 90%;
-  max-width: 420px;
-  text-align: center;
-  z-index: 2;
-}
 
 /* 主按鈕 */
 .main-btn {
@@ -144,7 +114,7 @@ body {
 <div class="container" id="container">
 
   <div class="main-btn" onclick="goLINE()">
-     立即加入 LINE（東京宅建士 Shin）
+    🚀 立即加入 LINE（東京宅建士 Shin）
   </div>
 
   <div class="qr-box">
@@ -157,14 +127,9 @@ body {
 <div class="orb"></div>
 
 <script>
-let isClicked = false;
-
 function goLINE() {
 
-  if (isClicked) return;
-  isClicked = true;
-
-  // 手機震動
+  // 手機震動（增加回饋）
   if (navigator.vibrate) navigator.vibrate(30);
 
   const container = document.getElementById("container");
@@ -177,28 +142,25 @@ function goLINE() {
 
 function openLINE() {
   const webURL = "https://line.me/ti/p/KwFJgZCs3r";
-  const appURL = "line://ti/p/KwFJgZCs3r";
+  const appURL = "https://line.me/ti/p/KwFJgZCs3r";
 
   const ua = navigator.userAgent;
 
-  const isLine = /Line/i.test(ua);
+  const isLine = ua.includes("Line");
   const isMobile = /iPhone|Android/i.test(ua);
 
-  // 🚫 LINE內建瀏覽器 → 提示
+  // LINE內建瀏覽器提示
   if (isLine) {
     document.getElementById("tip").style.display = "block";
-    isClicked = false; // 讓使用者可以再點
     return;
   }
 
   if (isMobile) {
-    // 嘗試開 LINE App
     window.location.href = appURL;
 
-    // fallback（App沒開才跳）
     setTimeout(() => {
       window.location.href = webURL;
-    }, 1300);
+    }, 1200);
   } else {
     window.open(webURL, "_blank");
   }
