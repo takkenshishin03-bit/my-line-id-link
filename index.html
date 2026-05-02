@@ -8,46 +8,31 @@
 <style>
 :root {
   --green: #06c755;
-  --bg1: #eef2f7;
-  --bg2: #dfe7f1;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body {
   height: 100vh;
-  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  background: linear-gradient(135deg, #eef2f7, #dfe7f1);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow: hidden;
 }
 
-/* 背景柔光 */
-.bg-glow {
-  position: fixed;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(6,199,85,0.15), transparent 70%);
-  filter: blur(80px);
-  top: -100px;
-  right: -100px;
-}
-
-/* 主容器 */
 .container {
   width: 90%;
   max-width: 420px;
   text-align: center;
-  position: relative;
-  z-index: 2;
 }
 
-/* 共用玻璃卡片 */
+/* 卡片 */
 .card {
   backdrop-filter: blur(18px);
   background: rgba(255,255,255,0.6);
@@ -56,17 +41,29 @@ body {
   box-shadow: 0 20px 50px rgba(0,0,0,0.08);
 }
 
+/* ===== 進場動畫 ===== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.9s ease forwards;
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.5s; }
+.delay-3 { animation-delay: 0.8s; }
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* 上方按鈕 */
 .link-box {
   padding: 18px;
-  margin-bottom: 28px;
-  transition: 0.35s;
+  margin-bottom: 10px;
   cursor: pointer;
-}
-
-.link-box:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 30px 70px rgba(0,0,0,0.12);
 }
 
 .link-box a {
@@ -74,109 +71,171 @@ body {
   color: var(--green);
   font-size: 18px;
   font-weight: 600;
-  letter-spacing: 1px;
 }
 
-/* 發光線條 */
-.line-glow {
+/* ===== 線條（流動） ===== */
+.line {
+  position: relative;
   width: 2px;
-  height: 40px;
-  margin: 0 auto 20px;
-  background: linear-gradient(to bottom, var(--green), transparent);
-  box-shadow: 0 0 12px rgba(6,199,85,0.6);
+  height: 90px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.line::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(6,199,85,0.8),
+    transparent
+  );
+  animation: flow 2.5s linear infinite;
+  filter: blur(0.5px);
+}
+
+@keyframes flow {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* ===== 光球＋拖尾 ===== */
+.orb {
+  position: absolute;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--green);
+  transform: translateX(-50%);
+  filter: blur(2px);
+  opacity: 0;
+}
+
+.trail {
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  transform: translateX(-50%);
+  filter: blur(6px);
+  opacity: 0;
+}
+
+.animate .orb {
+  animation: orbMove 1.5s ease forwards;
+}
+
+.animate .trail:nth-child(2) {
+  animation: trailMove 1.5s ease forwards;
+  animation-delay: 0.05s;
+}
+.animate .trail:nth-child(3) {
+  animation: trailMove 1.5s ease forwards;
+  animation-delay: 0.1s;
+}
+.animate .trail:nth-child(4) {
+  animation: trailMove 1.5s ease forwards;
+  animation-delay: 0.15s;
+}
+
+@keyframes orbMove {
+  0% {
+    top: 80px;
+    transform: translateX(-50%) scale(0.6);
+    opacity: 0;
+  }
+  20% { opacity: 1; }
+  50% {
+    transform: translateX(-50%) scale(1.3);
+  }
+  100% {
+    top: -15px;
+    transform: translateX(-50%) scale(0.4);
+    opacity: 0;
+  }
+}
+
+@keyframes trailMove {
+  0% {
+    top: 80px;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.4;
+  }
+  100% {
+    top: -15px;
+    opacity: 0;
+  }
 }
 
 /* 中間文字 */
 .middle-text {
   font-size: 14px;
   color: #666;
-  margin-bottom: 28px;
-  letter-spacing: 0.5px;
+  margin: 20px 0 25px;
 }
 
-/* QR 卡片 */
+/* QR */
 .qr-box {
-  padding: 30px 25px;
-  transition: 0.35s;
-}
-
-.qr-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.12);
-}
-
-.qr-title {
-  font-size: 15px;
-  color: #333;
-  margin-bottom: 15px;
-  letter-spacing: 1px;
+  padding: 30px;
 }
 
 .qr-box img {
-  width: 100%;
-  max-width: 220px;
-  border-radius: 14px;
-  transition: 0.3s;
+  width: 200px;
+  border-radius: 12px;
 }
 
-.qr-box img:hover {
-  transform: scale(1.04);
-}
-
-/* 小提示 */
-.tip {
-  font-size: 12px;
-  color: #999;
-  margin-top: 15px;
-}
-
-/* 手機優化 */
-@media (max-width: 480px) {
-  .link-box a {
-    font-size: 16px;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<div class="bg-glow"></div>
+<div class="container" id="container">
 
-<div class="container">
-
-  <!-- 上方按鈕 -->
-  <div class="card link-box" onclick="openLine()">
-    <a href="https://line.me/ti/p/shenken0330">點擊加入 LINE 好友</a>
+  <!-- 上 -->
+  <div class="card link-box fade-up delay-1" onclick="startAnimation()">
+    <a href="javascript:void(0)">點擊加入 LINE 好友</a>
   </div>
 
-  <div class="line-glow"></div>
+  <!-- 線 -->
+  <div class="line fade-up delay-2">
+    <div class="orb"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+  </div>
 
-  <!-- 中間文字 -->
-  <div class="middle-text">
+  <!-- 文字 -->
+  <div class="middle-text fade-up delay-2">
     或者點取上面連結自動跳轉LINE
   </div>
 
-  <!-- QR Code -->
-  <div class="card qr-box">
-    <div class="qr-title">掃描 QR Code 加入</div>
-    <img src="qrline.jpg" alt="LINE QR Code">
-    <div class="tip">建議使用 LINE 內建掃描器</div>
+  <!-- QR -->
+  <div class="card qr-box fade-up delay-3">
+    <img src="qrline.jpg" alt="QR Code">
   </div>
 
 </div>
 
 <script>
-function openLine() {
+function startAnimation() {
+  const container = document.getElementById("container");
   const link = "https://line.me/ti/p/shenken0330";
 
-  // 嘗試開啟 LINE App（手機）
-  window.location.href = link;
+  if (container.classList.contains("animate")) return;
 
-  // fallback（避免有些瀏覽器沒反應）
+  container.classList.add("animate");
+
   setTimeout(() => {
-    window.open(link, "_blank");
-  }, 500);
+    window.location.href = link;
+  }, 1500);
 }
 </script>
 
