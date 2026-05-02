@@ -157,9 +157,14 @@ body {
 <div class="orb"></div>
 
 <script>
+let isClicked = false;
+
 function goLINE() {
 
-  // 手機震動（增加回饋）
+  if (isClicked) return;
+  isClicked = true;
+
+  // 手機震動
   if (navigator.vibrate) navigator.vibrate(30);
 
   const container = document.getElementById("container");
@@ -172,25 +177,28 @@ function goLINE() {
 
 function openLINE() {
   const webURL = "https://line.me/ti/p/KwFJgZCs3r";
-  const appURL = "https://line.me/ti/p/KwFJgZCs3r";
+  const appURL = "line://ti/p/KwFJgZCs3r";
 
   const ua = navigator.userAgent;
 
-  const isLine = ua.includes("Line");
+  const isLine = /Line/i.test(ua);
   const isMobile = /iPhone|Android/i.test(ua);
 
-  // LINE內建瀏覽器提示
+  // 🚫 LINE內建瀏覽器 → 提示
   if (isLine) {
     document.getElementById("tip").style.display = "block";
+    isClicked = false; // 讓使用者可以再點
     return;
   }
 
   if (isMobile) {
+    // 嘗試開 LINE App
     window.location.href = appURL;
 
+    // fallback（App沒開才跳）
     setTimeout(() => {
       window.location.href = webURL;
-    }, 1200);
+    }, 1300);
   } else {
     window.open(webURL, "_blank");
   }
