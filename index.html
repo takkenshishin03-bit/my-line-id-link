@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>加入LINE好友</title>
+<title>快速聯絡</title>
 
 <style>
 :root {
@@ -18,23 +18,23 @@
 
 body {
   height: 100vh;
-  background: linear-gradient(135deg, #eef2f7, #dfe7f1);
+  background: radial-gradient(circle at top, #1a1a1a, #000);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow: hidden;
+  color: white;
 }
 
-/* 背景流光 */
+/* 背景能量線 */
 .bg-line {
   position: fixed;
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 3px;
+  width: 4px;
   height: 120%;
-  z-index: 0;
 }
 
 .bg-line::before {
@@ -42,87 +42,95 @@ body {
   position: absolute;
   width: 100%;
   height: 200%;
-  background: linear-gradient(to top, transparent, rgba(6,199,85,0.9), transparent);
-  animation: flowUp 2s linear infinite;
+  background: linear-gradient(to top, transparent, #06c755, transparent);
+  animation: flow 1.8s linear infinite;
   filter: blur(1px);
 }
 
-@keyframes flowUp {
+@keyframes flow {
   0% { transform: translateY(100%); }
   100% { transform: translateY(-100%); }
 }
 
-/* 主體 */
 .container {
   width: 90%;
   max-width: 420px;
   text-align: center;
-  position: relative;
   z-index: 2;
 }
 
-.card {
-  backdrop-filter: blur(18px);
-  background: rgba(255,255,255,0.6);
-  border-radius: 22px;
-  padding: 20px;
-  border: 1px solid rgba(255,255,255,0.4);
-}
-
-/* 按鈕 */
-.link-box {
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-
-.link-box a {
-  display: block;
-  padding: 16px;
-  border-radius: 14px;
-  text-decoration: none;
-  color: white;
-  font-weight: 600;
+/* 主按鈕 */
+.main-btn {
+  padding: 18px;
+  border-radius: 18px;
   background: linear-gradient(135deg, #06c755, #04a944);
-  box-shadow: 0 8px 20px rgba(6,199,85,0.4);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(6,199,85,0.5);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 rgba(6,199,85,0.4); }
+  50% { box-shadow: 0 0 25px rgba(6,199,85,0.8); }
+  100% { box-shadow: 0 0 0 rgba(6,199,85,0.4); }
 }
 
 /* QR */
 .qr-box {
-  padding: 20px;
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
 }
 
 .qr-text {
   font-size: 13px;
-  color: #555;
+  opacity: 0.7;
   margin-bottom: 10px;
 }
 
 .qr-box img {
   width: 200px;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
-/* 光球 */
+/* 光球吸附 */
 .orb {
-  position: absolute;
+  position: fixed;
   left: 50%;
+  bottom: 120px;
   width: 14px;
   height: 14px;
+  background: #06c755;
   border-radius: 50%;
-  background: var(--green);
   transform: translateX(-50%);
-  filter: blur(2px);
+  filter: blur(3px);
   opacity: 0;
 }
 
 .animate .orb {
-  animation: orbMove 1.5s ease forwards;
+  animation: absorb 1.2s ease forwards;
 }
 
-@keyframes orbMove {
-  0% { top: 60px; opacity: 0; }
-  20% { opacity: 1; }
-  100% { top: -100vh; opacity: 0; }
+@keyframes absorb {
+  0% { bottom: 120px; opacity: 1; transform: translateX(-50%) scale(0.8);}
+  100% { bottom: 100vh; opacity: 0; transform: translateX(-50%) scale(0.2);}
+}
+
+/* LINE內提示 */
+.tip {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  display: none;
 }
 </style>
 </head>
@@ -131,46 +139,63 @@ body {
 
 <div class="bg-line"></div>
 
+<div class="tip" id="tip">請點右上角 → 用瀏覽器開啟</div>
+
 <div class="container" id="container">
 
-  <!-- LINE 按鈕（關鍵改這裡） -->
-  <div class="card link-box" onclick="startAnimation(event)">
-    <a id="lineLink" href="https://line.me/ti/p/KwFJgZCs3r" target="_blank">
-      點擊加入 LINE 好友
-    </a>
+  <div class="main-btn" onclick="goLINE()">
+     立即加入 LINE（東京宅建士 Shin）
   </div>
 
-  <!-- 光球 -->
-  <div style="position: relative; height:0;">
-    <div class="orb"></div>
-  </div>
-
-  <!-- QR -->
-  <div class="card qr-box">
-    <div class="qr-text">或者點取上面連結自動跳轉LINE</div>
+  <div class="qr-box">
+    <div class="qr-text">或掃描 QR Code 加入</div>
     <img src="qrline.jpg">
   </div>
 
 </div>
 
+<div class="orb"></div>
+
 <script>
-function startAnimation(e) {
-  e.preventDefault(); // 阻止立即跳轉
+function goLINE() {
+
+  // 手機震動（增加回饋）
+  if (navigator.vibrate) navigator.vibrate(30);
 
   const container = document.getElementById("container");
-  const link = document.getElementById("lineLink");
-
-  if (container.classList.contains("animate")) return;
-
   container.classList.add("animate");
 
-  // 1.5 秒後「用原生方式點擊」
   setTimeout(() => {
-    link.click();
-  }, 1500);
+    openLINE();
+  }, 1000);
+}
+
+function openLINE() {
+  const webURL = "https://line.me/ti/p/shenken0330";
+  const appURL = "line://ti/p/shenken0330";
+
+  const ua = navigator.userAgent;
+
+  const isLine = ua.includes("Line");
+  const isMobile = /iPhone|Android/i.test(ua);
+
+  // LINE內建瀏覽器提示
+  if (isLine) {
+    document.getElementById("tip").style.display = "block";
+    return;
+  }
+
+  if (isMobile) {
+    window.location.href = appURL;
+
+    setTimeout(() => {
+      window.location.href = webURL;
+    }, 1200);
+  } else {
+    window.open(webURL, "_blank");
+  }
 }
 </script>
 
 </body>
 </html>
-
