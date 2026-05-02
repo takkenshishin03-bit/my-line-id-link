@@ -148,5 +148,37 @@ body {
   <!-- 上方按鈕 -->
   <div class="card link-box" onclick="openLine()">
     <a href="YOUR_LINE_LINK">點擊加入 LINE 好友</a>
-  </div
+  </div>
 
+  <div class="line-glow"></div>
+
+  <!-- 中間文字 -->
+  <div class="middle-text">
+    或者點取上面連結自動跳轉LINE
+  </div>
+
+  <!-- QR Code -->
+  <div class="card qr-box">
+    <div class="qr-title">掃描 QR Code 加入</div>
+    <img src="qrline.jpg" alt="LINE QR Code">
+    <div class="tip">建議使用 LINE 內建掃描器</div>
+  </div>
+
+</div>
+
+<script>
+function openLine() {
+  const link = "https://line.me/ti/p/KwFJgZCs3r";
+
+  // 嘗試開啟 LINE App（手機）
+  window.location.href = link;
+
+  // fallback（避免有些瀏覽器沒反應）
+  setTimeout(() => {
+    window.open(link, "_blank");
+  }, 500);
+}
+</script>
+
+</body>
+</html>
