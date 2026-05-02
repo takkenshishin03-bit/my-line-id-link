@@ -26,10 +26,56 @@ body {
   overflow: hidden;
 }
 
+/* ===== 背景流光線（最底層） ===== */
+.bg-line {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 120%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-line::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(
+    to top,
+    transparent,
+    rgba(6,199,85,0.9),
+    transparent
+  );
+  animation: flowUp 2s linear infinite;
+  filter: blur(1px);
+}
+
+/* 強一點的光暈 */
+.bg-line::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 100%;
+  left: -1.5px;
+  background: rgba(6,199,85,0.15);
+  filter: blur(6px);
+}
+
+@keyframes flowUp {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(-100%); }
+}
+
+/* ===== 主內容 ===== */
 .container {
   width: 90%;
   max-width: 420px;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 /* 卡片 */
@@ -49,8 +95,7 @@ body {
 }
 
 .delay-1 { animation-delay: 0.2s; }
-.delay-2 { animation-delay: 0.5s; }
-.delay-3 { animation-delay: 0.8s; }
+.delay-2 { animation-delay: 0.4s; }
 
 @keyframes fadeUp {
   to {
@@ -62,7 +107,7 @@ body {
 /* 上方按鈕 */
 .link-box {
   padding: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 12px; /* 🔧 距離縮短 */
   cursor: pointer;
 }
 
@@ -73,36 +118,7 @@ body {
   font-weight: 600;
 }
 
-/* ===== 線條（流動） ===== */
-.line {
-  position: relative;
-  width: 2px;
-  height: 90px;
-  margin: 0 auto;
-  overflow: visible;
-}
-
-.line::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 200%;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(6,199,85,0.8),
-    transparent
-  );
-  animation: flow 2.5s linear infinite;
-  filter: blur(0.5px);
-}
-
-@keyframes flow {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-/* ===== 光球＋拖尾 ===== */
+/* ===== 光球（保留） ===== */
 .orb {
   position: absolute;
   left: 50%;
@@ -145,46 +161,26 @@ body {
 }
 
 @keyframes orbMove {
-  0% {
-    top: 80px;
-    transform: translateX(-50%) scale(0.6);
-    opacity: 0;
-  }
+  0% { top: 60px; opacity: 0; }
   20% { opacity: 1; }
-  50% {
-    transform: translateX(-50%) scale(1.3);
-  }
-  100% {
-    top: -15px;
-    transform: translateX(-50%) scale(0.4);
-    opacity: 0;
-  }
+  100% { top: -100vh; opacity: 0; }
 }
 
 @keyframes trailMove {
-  0% {
-    top: 80px;
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.4;
-  }
-  100% {
-    top: -15px;
-    opacity: 0;
-  }
+  0% { top: 60px; opacity: 0; }
+  20% { opacity: 0.4; }
+  100% { top: -100vh; opacity: 0; }
 }
 
-/* 中間文字 */
-.middle-text {
-  font-size: 14px;
-  color: #666;
-  margin: 20px 0 25px;
-}
-
-/* QR */
+/* ===== QR ===== */
 .qr-box {
-  padding: 30px;
+  padding: 25px;
+}
+
+.qr-text {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 15px;
 }
 
 .qr-box img {
@@ -197,6 +193,9 @@ body {
 
 <body>
 
+<!-- 背景流光 -->
+<div class="bg-line"></div>
+
 <div class="container" id="container">
 
   <!-- 上 -->
@@ -204,21 +203,19 @@ body {
     <a href="javascript:void(0)">點擊加入 LINE 好友</a>
   </div>
 
-  <!-- 線 -->
-  <div class="line fade-up delay-2">
+  <!-- 光球 -->
+  <div style="position: relative; height:0;">
     <div class="orb"></div>
     <div class="trail"></div>
     <div class="trail"></div>
     <div class="trail"></div>
   </div>
 
-  <!-- 文字 -->
-  <div class="middle-text fade-up delay-2">
-    或者點取上面連結自動跳轉LINE
-  </div>
-
   <!-- QR -->
-  <div class="card qr-box fade-up delay-3">
+  <div class="card qr-box fade-up delay-2">
+    <div class="qr-text">
+      或者點取上面連結自動跳轉LINE
+    </div>
     <img src="qrline.jpg" alt="QR Code">
   </div>
 
