@@ -1,108 +1,152 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>加入LINE好友</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>加入LINE好友</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+<style>
+:root {
+  --green: #06c755;
+  --bg1: #eef2f7;
+  --bg2: #dfe7f1;
+}
 
-    body {
-      height: 100vh;
-      background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
-    .container {
-      width: 90%;
-      max-width: 420px;
-      text-align: center;
-    }
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* 上方按鈕 */
-    .link-box {
-      background: white;
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 25px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      transition: 0.3s;
-    }
+/* 背景柔光 */
+.bg-glow {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(6,199,85,0.15), transparent 70%);
+  filter: blur(80px);
+  top: -100px;
+  right: -100px;
+}
 
-    .link-box:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-    }
+/* 主容器 */
+.container {
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
 
-    .link-box a {
-      text-decoration: none;
-      color: #06c755;
-      font-weight: 600;
-      font-size: 18px;
-      display: block;
-    }
+/* 共用玻璃卡片 */
+.card {
+  backdrop-filter: blur(18px);
+  background: rgba(255,255,255,0.6);
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
 
-    /* 中間文字 */
-    .middle-text {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 25px;
-      line-height: 1.6;
-    }
+/* 上方按鈕 */
+.link-box {
+  padding: 18px;
+  margin-bottom: 28px;
+  transition: 0.35s;
+  cursor: pointer;
+}
 
-    /* QR 區 */
-    .qr-box {
-      background: white;
-      border-radius: 25px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
+.link-box:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.12);
+}
 
-    .qr-box img {
-      width: 100%;
-      max-width: 220px;
-      border-radius: 12px;
-    }
+.link-box a {
+  text-decoration: none;
+  color: var(--green);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
 
-    .qr-title {
-      margin-bottom: 15px;
-      font-size: 16px;
-      color: #333;
-      font-weight: 500;
-    }
+/* 發光線條 */
+.line-glow {
+  width: 2px;
+  height: 40px;
+  margin: 0 auto 20px;
+  background: linear-gradient(to bottom, var(--green), transparent);
+  box-shadow: 0 0 12px rgba(6,199,85,0.6);
+}
 
-  </style>
+/* 中間文字 */
+.middle-text {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 28px;
+  letter-spacing: 0.5px;
+}
+
+/* QR 卡片 */
+.qr-box {
+  padding: 30px 25px;
+  transition: 0.35s;
+}
+
+.qr-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+}
+
+.qr-title {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.qr-box img {
+  width: 100%;
+  max-width: 220px;
+  border-radius: 14px;
+  transition: 0.3s;
+}
+
+.qr-box img:hover {
+  transform: scale(1.04);
+}
+
+/* 小提示 */
+.tip {
+  font-size: 12px;
+  color: #999;
+  margin-top: 15px;
+}
+
+/* 手機優化 */
+@media (max-width: 480px) {
+  .link-box a {
+    font-size: 16px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
 
-    <!-- 上方連結 -->
-    <div class="link-box">
-      <a href="YOUR_LINE_LINK" target="_blank">
-        點我加入LINE好友
-      </a>
-    </div>
+<div class="bg-glow"></div>
 
-    <!-- 中間說明 -->
-    <div class="middle-text">
-      或者點取上面連結自動跳轉LINE
-    </div>
+<div class="container">
 
-    <!-- QR Code -->
-    <div class="qr-box">
-      <div class="qr-title">掃描QR Code加入</div>
-      <img src="qr.png" alt="LINE QR Code">
-    </div>
+  <!-- 上方按鈕 -->
+  <div class="card link-box" onclick="openLine()">
+    <a href="YOUR_LINE_LINK">點擊加入 LINE 好友</a>
+  </div
 
-  </div>
-</body>
-</html>
